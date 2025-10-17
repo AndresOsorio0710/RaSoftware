@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class RegisterUserRequest extends FormRequest
 {
@@ -19,6 +21,14 @@ class RegisterUserRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        // ✅ Convierte el campo email a minúsculas antes de validar.
+        $this->merge([
+            'email' => Str::lower($this->input('email')),
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -28,7 +38,12 @@ class RegisterUserRequest extends FormRequest
     {
         return [
             'id_number' => ['required', 'numeric', 'unique:users,id_number'],
-            'email' => ['required', 'string', 'email', 'unique:users,email'],
+            'email' => [
+                'required', 
+                'string', 
+                'email', 
+                'unique:users,email'
+            ],
             'first_name' => ['required', 'string', 'max:100'],
             'last_name' => ['required', 'string', 'max:100'],
             'password' => [

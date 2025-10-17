@@ -96,4 +96,9 @@ class User extends Authenticatable
             set: fn (string $value) => strtolower($value),
         );
     }
+
+    protected function setEmailAttribute(string $value): void
+    {
+        $this->attributes['email'] = strtolower($value);
+    }
 }

@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterUserRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UserRegisterController extends Controller
 {
@@ -17,6 +18,7 @@ class UserRegisterController extends Controller
         RegisterUserHandler $handler
     )
     {
+        Log::info('Inicio de procesamiento de solicitud de egistro de usuario.');
         $command = new RegisterUserCommand(
             firstName: $request->first_name,
             lastName: $request->last_name,
@@ -26,21 +28,28 @@ class UserRegisterController extends Controller
         );
 
         try {
-            // Usamos DB::transaction para asegurar que si algo falla, no se guarda nada.
             $result = DB::transaction(fn() => $handler->handle($command));
             
-            // 4. Respuesta Exitosa: 201 Created
+            Log::info('Usuario registrado exitosamente.');
             return ApiResponse::created(
                 data: new UserResource($result['user']),
                 message: "Usuario registrado exitosamente."
             );
 
         } catch (\Throwable $e) {
-            // Manejo de excepciones genéricas o de dominio que puedan surgir.
-            // Aunque RegisterUserRequest ya maneja unicidad (422), es bueno tener un catch all.
+            $statusCode = $e->getCode() >= 400 && $e->getCode() < 600 ? $e->getCode() : 500;
 
-            // Si fuera una excepción de negocio más específica (ej: RoleNotFound), la capturaríamos aquí.
-            return ApiResponse::errorConflict($e->getMessage()); // Usar 409 para errores de negocio
+            Log::error('Fallo al registrar usuario.', [
+                'exception' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'request_url' => request()->fullUrl(),
+            ]);
+            
+            return ApiResponse::error(
+                message: 'Error: ' . $e->getMessage(),
+                status: $statusCode
+            );
         }
     }
 }

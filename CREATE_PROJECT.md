@@ -71,6 +71,13 @@ composer create-project laravel/laravel RaSoftware
     php artisan make:class Application/Handlers/User/RegisterUser/RegisterUserHandler
     php artisan make:class Application/Handlers/User/GetAllUsers/GetAllUsersHandler
     ```
+
+- ### Middlewares
+
+    ```
+    php artisan make:middleware RequestTraceability
+    ```
+    
 - ### Controllers
 
     ```

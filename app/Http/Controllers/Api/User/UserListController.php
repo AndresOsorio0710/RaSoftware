@@ -9,11 +9,13 @@ use App\Core\ApiResponse;
 use App\Http\Resources\UserResource;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 class UserListController extends Controller
 {
     public function index(GetAllUsersHandler $handler): JsonResponse
     {
+        Log::info('Inicio de procesamiento de solicitud de lista de usuarios.');
         try {
             $query = new GetAllUsersQuery();
             
@@ -22,6 +24,7 @@ class UserListController extends Controller
 
             // 1. **Verificación de Resultados**
             if ($users->isEmpty()) {
+                Log::info('No se encontraron usuarios para la consulta.');
                 return ApiResponse::errorNotFound("No se encontraron usuarios para la consulta.");
             }
             
@@ -29,14 +32,21 @@ class UserListController extends Controller
             // Usamos ::collection($paginatedUsers) para aplicar el Resource a cada elemento del paginador.
             $resourceCollection = UserResource::collection($users)->toResponse(request())->getData();
 
+            Log::info('Lista de usuarios obtenida exitosamente.');
             return ApiResponse::success(
                 $resourceCollection,
                 "Lista de usuarios obtenida exitosamente."
             );
 
         } catch (Exception $e) {
-            // 3. Manejar la excepción lanzada por el Handler
             $statusCode = $e->getCode() >= 400 && $e->getCode() < 600 ? $e->getCode() : 500;
+            
+            Log::error('Fallo al obtener datos externos.', [
+                'exception' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'request_url' => request()->fullUrl(),
+            ]);
             
             return ApiResponse::error(
                 message: 'Error: ' . $e->getMessage(),
