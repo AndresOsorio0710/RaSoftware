@@ -18,14 +18,18 @@ class RegisterUserHandler
 
     public function handle(RegisterUserCommand $command): array
     {
-        $user = User::create([
+        $userName = explode('@', $command->email)[0];
+
+        $data = [
             'first_name' => $command->firstName,
             'last_name' => $command->lastName,
-            'user_name' => $command->userName,
+            'user_name' => $userName,
             'id_number' => $command->idNumber,
             'email' => $command->email,
             'password' => Hash::make($command->password),
-        ]);
+        ];
+
+        $user = User::create($data);
 
         $token = $user->createToken("API-Token-{$user->user_name}")->plainTextToken;
 

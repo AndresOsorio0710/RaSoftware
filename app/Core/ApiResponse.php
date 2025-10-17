@@ -24,6 +24,22 @@ class ApiResponse
     }
 
     /**
+     * Respuesta genérica de error (300 OK, 600 Internal Server Error, etc.).
+     */
+    public static function error(
+        mixed $data = null, 
+        string $message = 'Internal Server Error', 
+        int $status = Response::HTTP_INTERNAL_SERVER_ERROR
+    ): JsonResponse
+    {
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'data' => $data,
+        ], $status);
+    }
+
+    /**
      * Respuesta para recursos creados (201 Created).
      */
     public static function created(
@@ -71,5 +87,18 @@ class ApiResponse
             'message' => $message,
             'data' => null,
         ], Response::HTTP_BAD_REQUEST);
+    }
+
+    /*
+    **
+     * Respuesta de error genérica del cliente (404 Not Found).
+     */
+    public static function errorNotFound(string $message = 'Not Found'): JsonResponse
+    {
+        return response()->json([
+            'success' => false,
+            'message' => $message,
+            'data' => null,
+        ], Response::HTTP_NOT_FOUND);
     }
 }

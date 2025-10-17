@@ -59,12 +59,24 @@ composer create-project laravel/laravel RaSoftware
     php artisan make:class Application/Commands/User/RegisterUser/RegisterUserCommand
     ```
 
+- ### Queries
+
+     ```
+    php artisan make:class Application/Queries/User/GetAllUsers/GetAllUsersQuery
+    ```
+
 - ### Handlers
 
     ```
     php artisan make:class Application/Handlers/User/RegisterUser/RegisterUserHandler
+    php artisan make:class Application/Handlers/User/GetAllUsers/GetAllUsersHandler
     ```
+- ### Controllers
 
+    ```
+    php artisan make:controller Api/User/UserRegisterController
+    php artisan make:controller Api/User/UserListController
+    ```
 - ### Responses
 
     ```

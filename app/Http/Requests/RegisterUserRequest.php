@@ -27,7 +27,6 @@ class RegisterUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_name' => ['required', 'string', 'max:50', 'unique:users,user_name'],
             'id_number' => ['required', 'numeric', 'unique:users,id_number'],
             'email' => ['required', 'string', 'email', 'unique:users,email'],
             'first_name' => ['required', 'string', 'max:100'],
@@ -65,11 +64,6 @@ class RegisterUserRequest extends FormRequest
             'last_name.required' => 'El apellido es requerido.',
             'last_name.string' => 'El apellido debe ser una cadena de texto valida.',
             'last_name.max' => 'El apellidoe es demasiado largo (maximo 100 caracteres).',
-
-            'user_name.required' => 'Este nombre de usuario es requerido.',
-            'user_name.string' => 'Este nombre de usuario debe ser una cadena de texto valida.',
-            'user_name.max' => 'Este nombre de usuario es demasiado largo (maximo 50 caracteres).',
-            'user_name.unique' => 'Este nombre de usuario ya esta registrado.',
 
             'email.required' => 'El correo electronico es requerido.',
             'email.unique' => 'Este correo electronico ya esta registrado.',

@@ -9,9 +9,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterUserRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
 
-class RegisterController extends Controller
+class UserRegisterController extends Controller
 {
     public function register(
         RegisterUserRequest $request,
@@ -21,7 +20,6 @@ class RegisterController extends Controller
         $command = new RegisterUserCommand(
             firstName: $request->first_name,
             lastName: $request->last_name,
-            userName: $request->user_name,
             idNumber: $request->id_number,
             email: $request->email,
             password: $request->password,
@@ -34,7 +32,7 @@ class RegisterController extends Controller
             // 4. Respuesta Exitosa: 201 Created
             return ApiResponse::created(
                 data: new UserResource($result['user']),
-                message: "User registered successfully."
+                message: "Usuario registrado exitosamente."
             );
 
         } catch (\Throwable $e) {
