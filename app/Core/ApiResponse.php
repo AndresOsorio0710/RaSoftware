@@ -33,7 +33,7 @@ class ApiResponse
     ): JsonResponse
     {
         return response()->json([
-            'success' => true,
+            'success' => false,
             'message' => $message,
             'data' => $data,
         ], $status);

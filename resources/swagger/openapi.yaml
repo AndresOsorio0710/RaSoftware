@@ -77,6 +77,69 @@ paths:
                   data:
                     type: array
                     example: []
+  /user/{id}:
+    get:
+      tags:
+        - User
+      summary: Obtener los detalles de un usuario por su ID (UUID).
+      description: Recupera la información de un usuario consultado por si ID (UUID).
+      operationId: findUserById
+      parameters:
+        - name: id
+          in: path
+          description: El UUID (identificador único) del usuario a consultar.
+          required: true
+          schema:
+            type: string
+            format: uuid # Especifica que el formato es un UUID
+          example: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+      responses:
+        '200':
+          description: Datos del usuario encontrados exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+              example:
+                status: success
+                message: Datos de usuario encontrados.
+                data:
+                  id: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+                  first_name: Ana
+                  last_name: Gómez
+                  user_name: ana.gomez
+                  email: ana.gomez@ejemplo.com
+                  id_number: 123456789
+        '404':
+          description: Usuario no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+              example:
+                status: error
+                message: No se encontraron datos del usuario.
+                data: null
+        '409': # Usamos 409 (Conflict) o 400 (Bad Request) según la lógica de tu Handler para UUID inválido
+          description: Error de formato del UUID.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+              example:
+                status: error
+                message: El formato del identificador no es un UUID válido.
+                data: null
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+              example:
+                status: error
+                message: Error de base de datos al recuperar usuario.
+                data: null
   /user/register:
     post:
       tags:
@@ -314,4 +377,17 @@ components:
         message:
           type: string
           example: Error SQL o de lógica de negocio capturado.
+    
+    ApiResponseError:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [error, fail] 
+          example: error
+        message:
+          type: string
+        data:
+          type: 'null'
+          example: null
       

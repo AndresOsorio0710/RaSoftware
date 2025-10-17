@@ -70,6 +70,7 @@ composer create-project laravel/laravel RaSoftware
     ```
     php artisan make:class Application/Handlers/User/RegisterUser/RegisterUserHandler
     php artisan make:class Application/Handlers/User/GetAllUsers/GetAllUsersHandler
+    php artisan make:class Application/Handlers/User/GetUsers/GetUsersHandler
     ```
 
 - ### Middlewares
@@ -83,6 +84,7 @@ composer create-project laravel/laravel RaSoftware
     ```
     php artisan make:controller Api/User/UserRegisterController
     php artisan make:controller Api/User/UserListController
+    php artisan make:controller Api/User/UserController
     ```
 - ### Responses
 
