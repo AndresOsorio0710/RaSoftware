@@ -44,6 +44,7 @@ composer create-project laravel/laravel RaSoftware
 
     ```
     php artisan make:request RegisterUserRequest
+    php artisan make:request UpdateUserRequest
     ```
 
 - ### Directories
@@ -70,7 +71,8 @@ composer create-project laravel/laravel RaSoftware
     ```
     php artisan make:class Application/Handlers/User/RegisterUser/RegisterUserHandler
     php artisan make:class Application/Handlers/User/GetAllUsers/GetAllUsersHandler
-    php artisan make:class Application/Handlers/User/GetUsers/GetUsersHandler
+    php artisan make:class Application/Handlers/User/GetUser/GetUserHandler
+    php artisan make:class Application/Handlers/User/UpdateUser/UpdateUserHandler
     ```
 
 - ### Middlewares
@@ -85,6 +87,7 @@ composer create-project laravel/laravel RaSoftware
     php artisan make:controller Api/User/UserRegisterController
     php artisan make:controller Api/User/UserListController
     php artisan make:controller Api/User/UserController
+    php artisan make:controller Api/User/UserUpdateController
     ```
 - ### Responses
 

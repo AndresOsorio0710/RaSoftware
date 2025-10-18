@@ -3,43 +3,45 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Application\Handlers\User\GetUser\GetUserHandler;
+use App\Application\Handlers\User\UpdateUser\UpdateUserHandler;
 use App\Core\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class UserController extends Controller
+class UserUpdateController extends Controller
 {
-    protected $handler;
+    protected $getUserHandler;
+    protected $updateUserHandler;
 
-    public function __construct(GetUserHandler $handler)
-    {
-        $this->handler = $handler;
+    public function __construct(
+        GetUserHandler $getUserHandler,
+        UpdateUserHandler $updateUserHandler,
+    ) {
+        $this->getUserHandler = $getUserHandler;
+        $this->updateUserHandler = $updateUserHandler;
     }
 
-    public function findById(string $id): JsonResponse
+    public function update(string $id, UpdateUserRequest $request): JsonResponse
     {
-        Log::info('Inicio de procesamiento de solicitud de información de usuario por id.');
-
-        if (empty($id)) {
-            Log::info('El parámetro "id" es obligatorio en la consulta.');
-
-            return ApiResponse::errorConflict('El parámetro "id" es obligatorio en la consulta.');
-        }
+        Log::info('Inicio de procesamiento de solicitud de actualización de usuario.', ['uuid' => $id]);
 
         try {
-            $user = $this->handler->handler($id);
+            $data = $request->validated();
+
+            $user = $this->updateUserHandler->handler($id, $data);
 
             $resource = new UserResource($user);
 
-            Log::info('Datos de usuario encontrados.');
+            Log::info('Usuario actualizado con éxito.', ['uuid' => $id]);
 
             return ApiResponse::success(
                 $resource,
-                "Datos de usuario encontrados."
+                "Usuario actualizado con éxito."
             );
         } catch (Exception $e) {
             $statusCode = $e->getCode() >= 400 && $e->getCode() < 600 ? $e->getCode() : 500;
@@ -49,7 +51,7 @@ class UserController extends Controller
                 return ApiResponse::errorNotFound("No se encontraron datos del usuario.");
             }
 
-            Log::error('Fallo al obtener datos de usuario.', [
+            Log::error('Fallo al actualizar usuario.', [
                 'exception' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
@@ -57,7 +59,7 @@ class UserController extends Controller
             ]);
 
             return ApiResponse::error(
-                message: 'Error: ' . $e->getMessage(),
+                message: 'Fallo al actualizar usuario: ' . $e->getMessage(),
                 status: $statusCode
             );
         }
