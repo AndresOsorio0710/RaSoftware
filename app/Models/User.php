@@ -63,7 +63,7 @@ class User extends Authenticatable
     protected function firstName(): Attribute
     {
         return Attribute::make(
-            set: fn (string $value) => strtoupper($value),
+            set: fn(string $value) => strtoupper($value),
         );
     }
 
@@ -73,7 +73,7 @@ class User extends Authenticatable
     protected function lastName(): Attribute
     {
         return Attribute::make(
-            set: fn (string $value) => strtoupper($value),
+            set: fn(string $value) => strtoupper($value),
         );
     }
 
@@ -83,7 +83,7 @@ class User extends Authenticatable
     protected function email(): Attribute
     {
         return Attribute::make(
-            set: fn (string $value) => strtolower($value),
+            set: fn(string $value) => strtolower($value),
         );
     }
 
@@ -93,12 +93,23 @@ class User extends Authenticatable
     protected function userName(): Attribute
     {
         return Attribute::make(
-            set: fn (string $value) => strtolower($value),
+            set: fn(string $value) => strtolower($value),
         );
     }
 
     protected function setEmailAttribute(string $value): void
     {
         $this->attributes['email'] = strtolower($value);
+    }
+
+    /**
+     * Verifica si el usuario tiene un rol específico.
+     *
+     * @param string $roleName
+     * @return bool
+     */
+    public function hasRole(string $roleName): bool
+    {
+        return $this->roles->contains('name', $roleName);
     }
 }

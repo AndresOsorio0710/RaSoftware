@@ -21,6 +21,9 @@
     php artisan make:controller Api/Role/UpdateRoleController
     php artisan make:controller Api/UserRole/CreateUserRoleController
     php artisan make:controller Api/UserRole/DeleteUserRoleController
+    php artisan make:controller Api/UserRole/ListUserRoleController
+    php artisan make:controller Api/Auth/LoginController
+    php artisan make:controller Api/Auth/LogoutController
     ```
 
 -   ### Create project
@@ -55,12 +58,22 @@
     php artisan make:class Application/Handlers/Role/UpdateRole/UpdateRoleHandler
     php artisan make:class Application/Handlers/UserRole/CreateUserRole/CreateUserRoleHandler
     php artisan make:class Application/Handlers/UserRole/DeleteUserRole/DeleteUserRoleHandler
+    php artisan make:class Application/Handlers/UserRole/ListUserRole/ListUserRoleHandler
+    php artisan make:class Application/Handlers/Auth/LoginHandler
     ```
 
 -   ### Middlewares
 
     ```
     php artisan make:middleware RequestTraceability
+    php artisan make:middleware CheckSuperAdminRole
+    php artisan make:middleware CheckAdminRole
+    php artisan make:middleware CheckDirectorRole
+    php artisan make:middleware CheckManagerRole
+    php artisan make:middleware CheckLiderRole
+    php artisan make:middleware CheckTeachernRole
+    php artisan make:middleware CheckEvaluatorRole
+    php artisan make:middleware CheckStudentRole
     ```
 
 -   ### Migrate
@@ -105,6 +118,7 @@
     php artisan make:request Role/CreateRoleRequest
     php artisan make:request Role/UpdateRoleRequest
     php artisan make:request UserRole/CreateUserRoleRequest
+    php artisan make:request Auth/LoginRequest
     ```
 
 -   ### Requires
@@ -129,6 +143,7 @@
     php artisan make:class Core/ApiResponse
     php artisan make:resource UserResource
     php artisan make:resource Role/RoleResource
+    php artisan make:resource Auth/AuthResource
     ```
 
 -   ### Routes
@@ -138,6 +153,7 @@
     New-Item routes/user.php -ItemType File
     New-Item routes/role.php -ItemType File
     New-Item routes/user_role.php -ItemType File
+    New-Item routes/auth.php -ItemType File
     ```
 
 -   ### Seeders

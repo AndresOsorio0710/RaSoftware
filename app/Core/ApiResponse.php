@@ -23,6 +23,32 @@ class ApiResponse
     }
 
     /**
+     * Respuesta genérica de login éxitoso (200 OK).
+     */
+    public static function authSuccess(
+        mixed $data = null,
+        string $accessToken = '',
+        string $message = 'Success'
+    ): JsonResponse {
+        return response()->json([
+            'success' => true,
+            'access_token' => $accessToken,
+            'message' => $message,
+            'data' => $data,
+        ], Response::HTTP_OK);
+    }
+
+    public static function unauthorized(): JsonResponse
+    {
+        return response()->json([
+            'success' => false,
+            'message' => "No autorizado",
+            'data' => null,
+        ], Response::HTTP_UNAUTHORIZED);
+    }
+
+
+    /**
      * Respuesta genérica de error (300 OK, 600 Internal Server Error, etc.).
      */
     public static function error(
