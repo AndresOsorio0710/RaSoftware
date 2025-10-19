@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,13 +18,26 @@ class Role extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',        // ⬅️ Añadido
-        'description', // ⬅️ Añadido
+        'name',
+        'description',
     ];
-    
+
     public function users(): BelongsToMany
     {
-        // El método automáticamente busca la tabla pivote 'role_user'
         return $this->belongsToMany(User::class);
+    }
+
+    public function name(): Attribute
+    {
+        return Attribute::make(
+            set: fn(string $value) => strtoupper($value),
+        );
+    }
+
+    public function description(): Attribute
+    {
+        return Attribute::make(
+            set: fn(string $value) => ucfirst($value),
+        );
     }
 }

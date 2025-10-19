@@ -120,7 +120,7 @@ paths:
                 status: error
                 message: No se encontraron datos del usuario.
                 data: null
-        '409': # Usamos 409 (Conflict) o 400 (Bad Request) según la lógica de tu Handler para UUID inválido
+        '409': 
           description: Error de formato del UUID.
           content:
             application/json:
@@ -140,6 +140,76 @@ paths:
                 status: error
                 message: Error de base de datos al recuperar usuario.
                 data: null
+    put:
+      tags:
+        - User
+      summary: Actualizar nombre y apellido de un usuario por ID.
+      description: Permite modificar el 'first_name' y 'last_name' de un usuario existente.
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          description: El UUID (identificador único) del usuario a actualizar.
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+      responses:
+        '200':
+          description: Usuario actualizado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+              example:
+                success: true
+                message: Usuario actualizado con éxito.
+                data:
+                  id: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+                  first_name: NUEVONOMBRE
+                  last_name: NUEVOAPELLIDO
+                  user_name: ana.gomez
+                  email: ana.gomez@ejemplo.com
+                  id_number: 123456789
+        '404':
+          description: Usuario no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+              example:
+                status: error
+                message: No se encontraron datos del usuario.
+                data: null
+        '409':
+          description: Error de formato del UUID (no válido).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+              example:
+                status: error
+                message: El formato del identificador no es un UUID válido.
+                data: null
+        '422':
+          description: Error de validación (campos first_name o last_name faltantes/inválidos).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Error de base de datos o interno inesperado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictError'
   /user/register:
     post:
       tags:
@@ -213,6 +283,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ConflictError"
+
 components:
   securitySchemes:
     bearerAuth:
@@ -221,6 +292,21 @@ components:
       bearerFormat: "Sanctum Token"
   schemas:
     # --- ESQUEMAS DE REQUESTS (Peticiones) ---
+    UserUpdateRequest:
+      type: object
+      description: Campos requeridos para la actualización de un usuario (solo nombre y apellido).
+      required:
+        - first_name
+        - last_name
+      properties:
+        first_name:
+          type: string
+          description: Nuevo nombre(s) del usuario.
+          example: Fernando
+        last_name:
+          type: string
+          description: Nuevo apellido(s) del usuario.
+          example: Rodriguez
     UserRegisterRequest:
       type: object
       required:
