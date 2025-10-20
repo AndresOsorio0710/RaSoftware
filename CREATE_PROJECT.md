@@ -24,6 +24,10 @@
     php artisan make:controller Api/UserRole/ListUserRoleController
     php artisan make:controller Api/Auth/LoginController
     php artisan make:controller Api/Auth/LogoutController
+    php artisan make:controller Api/Faculty/CreateFacultyController
+    php artisan make:controller Api/Faculty/GetFacultyController
+    php artisan make:controller Api/Faculty/ListFacultyController
+    php artisan make:controller Api/Faculty/UpdateFacultyController
     ```
 
 -   ### Create project
@@ -60,6 +64,10 @@
     php artisan make:class Application/Handlers/UserRole/DeleteUserRole/DeleteUserRoleHandler
     php artisan make:class Application/Handlers/UserRole/ListUserRole/ListUserRoleHandler
     php artisan make:class Application/Handlers/Auth/LoginHandler
+    php artisan make:class Application/Handlers/Faculty/CreateFaculty/CreateFacultyHandler
+    php artisan make:class Application/Handlers/Faculty/GetFaculty/GetFacultyHandler
+    php artisan make:class Application/Handlers/Faculty/ListFaculty/ListFacultyHandler
+    php artisan make:class Application/Handlers/Faculty/UpdateFaculty/UpdateFacultyHandler
     ```
 
 -   ### Middlewares
@@ -92,16 +100,10 @@
 
 -   ### Models
 
-    _Role_
-
     ```
     php artisan make:model Role -m
-    ```
-
-    _Role User_
-
-    ```
     php artisan make:migration create_role_user_table --create=role_user
+    php artisan make:model Faculty -m
     ```
 
 -   ### Queries
@@ -119,6 +121,8 @@
     php artisan make:request Role/UpdateRoleRequest
     php artisan make:request UserRole/CreateUserRoleRequest
     php artisan make:request Auth/LoginRequest
+    php artisan make:request Faculty/CreateFacultyRequest
+    php artisan make:request Faculty/UpdateFacultyRequest
     ```
 
 -   ### Requires
@@ -144,6 +148,7 @@
     php artisan make:resource UserResource
     php artisan make:resource Role/RoleResource
     php artisan make:resource Auth/AuthResource
+    php artisan make:resource Faculty/FacultyResource
     ```
 
 -   ### Routes
@@ -154,6 +159,7 @@
     New-Item routes/role.php -ItemType File
     New-Item routes/user_role.php -ItemType File
     New-Item routes/auth.php -ItemType File
+    New-Item routes/faculty.php -ItemType File
     ```
 
 -   ### Seeders
@@ -162,6 +168,9 @@
 
         ```
         php artisan make:seeder RoleSeeder
+        php artisan make:seeder UserSeeder
+        php artisan make:seeder RoleUserSeeder
+        php artisan make:seeder FacultySeeder
         ```
 
     -   _Execute_
