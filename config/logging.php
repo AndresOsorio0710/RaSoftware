@@ -54,7 +54,7 @@ return [
 
         'stack' => [
             'driver' => 'stack',
-            'channels' => explode(',', (string) env('LOG_STACK', 'single')),
+            'channels' => ['daily_trace'],
             'ignore_exceptions' => false,
         ],
 
@@ -127,6 +127,13 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        'daily_trace' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/trace/api.log'), // El log se llamará api-YYYY-MM-DD.log
+            'level' => env('LOG_LEVEL', 'info'),
+            'days' => 365,
+            'bubble' => false, // No queremos que se propague a otros handlers/canales
+        ],
     ],
 
 ];

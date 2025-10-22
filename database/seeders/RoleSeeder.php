@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Role;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -15,7 +14,8 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         $roles = [
-            'ADMIN' => 'Administrador del sistema con acceso total.',
+            'SUPER ADMIN' => 'Super administrador del sistema con acceso total.',
+            'ADMIN' => 'Administrador del negocio con acceso total.',
             'DIRECTOR' => 'Director del plantel.',
             'MANAGER' => 'Jefe o director de programa.',
             'LIDER' => 'Líder de momento.',
@@ -31,7 +31,7 @@ class RoleSeeder extends Seeder
                     ['description' => $description]
                 );
             }
-            $this->command->info('Roles base creados exitosamente.');
+            $this->command->info('Roles (SADMIN, ADMIN, MANAGER, LIDER, TEACHER, EVALUATOR y STUDENT) base creados exitosamente.');
         });
     }
 }

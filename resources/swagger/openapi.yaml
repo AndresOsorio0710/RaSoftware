@@ -1,0 +1,479 @@
+openapi: 3.1.1
+info:
+  title: API RaSoftware
+  description: API para la gestión de evaluación de resultados de aprendizaje.
+  contact:
+    email: andres.osorio0710@gmail.com
+  version: 1.0.0
+externalDocs:
+  description: Respositorio GitHub
+  url: https://github.com/AndresOsorio0710/RaSoftware
+servers:
+  - url: http://127.0.0.1:8000/api
+    description: Servidor de Desarrollo Local
+tags:
+  - name: User
+    description: Gestión y consulta de perfiles de usuario.
+paths:
+  /user:
+    get:
+      tags:
+        - User
+      summary: Obtener lista completa de usuarios
+      description: Recupera una lista completa (no paginada) de todos los usuarios registrados, con sus nombres en mayúsculas.
+      operationId: getAllUsers
+      responses:
+        # --- Respuesta 200: Éxito con Contenido ---
+        '200':
+          description: Lista de usuarios obtenida exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Lista de usuarios obtenida exitosamente.
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+        
+        # --- Respuesta 404: No Encontrado (Lista Vacía) ---
+        '404':
+          description: No se encontraron usuarios para la consulta (lista vacía).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: No se encontraron usuarios para la consulta.
+                  data:
+                    type: array
+                    example: []
+
+        # --- Respuesta 500: Error de Servidor ---
+        '500':
+          description: Error de base de datos o error interno inesperado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Error Error de base de datos al recuperar usuarios.
+                  data:
+                    type: array
+                    example: []
+  /user/{id}:
+    get:
+      tags:
+        - User
+      summary: Obtener los detalles de un usuario por su ID (UUID).
+      description: Recupera la información de un usuario consultado por si ID (UUID).
+      operationId: findUserById
+      parameters:
+        - name: id
+          in: path
+          description: El UUID (identificador único) del usuario a consultar.
+          required: true
+          schema:
+            type: string
+            format: uuid # Especifica que el formato es un UUID
+          example: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+      responses:
+        '200':
+          description: Datos del usuario encontrados exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+              example:
+                status: success
+                message: Datos de usuario encontrados.
+                data:
+                  id: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+                  first_name: Ana
+                  last_name: Gómez
+                  user_name: ana.gomez
+                  email: ana.gomez@ejemplo.com
+                  id_number: 123456789
+        '404':
+          description: Usuario no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+              example:
+                status: error
+                message: No se encontraron datos del usuario.
+                data: null
+        '409': 
+          description: Error de formato del UUID.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+              example:
+                status: error
+                message: El formato del identificador no es un UUID válido.
+                data: null
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+              example:
+                status: error
+                message: Error de base de datos al recuperar usuario.
+                data: null
+    put:
+      tags:
+        - User
+      summary: Actualizar nombre y apellido de un usuario por ID.
+      description: Permite modificar el 'first_name' y 'last_name' de un usuario existente.
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          description: El UUID (identificador único) del usuario a actualizar.
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+      responses:
+        '200':
+          description: Usuario actualizado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+              example:
+                success: true
+                message: Usuario actualizado con éxito.
+                data:
+                  id: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+                  first_name: NUEVONOMBRE
+                  last_name: NUEVOAPELLIDO
+                  user_name: ana.gomez
+                  email: ana.gomez@ejemplo.com
+                  id_number: 123456789
+        '404':
+          description: Usuario no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+              example:
+                status: error
+                message: No se encontraron datos del usuario.
+                data: null
+        '409':
+          description: Error de formato del UUID (no válido).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+              example:
+                status: error
+                message: El formato del identificador no es un UUID válido.
+                data: null
+        '422':
+          description: Error de validación (campos first_name o last_name faltantes/inválidos).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Error de base de datos o interno inesperado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictError'
+  /user/register:
+    post:
+      tags:
+        - User
+      summary: Registrar un nuevo usuario
+      description: | 
+        Crea una nueca cuenta. 
+        
+        Request:
+          - email: string REQUERIDO
+            1. Formato email válido.
+            2. Unuco.
+            
+          - id_number: string REQUERIDO
+            1. Númerico.
+            2. Unico.
+          
+          -  poassword: string REQUERIDO
+              1. Debe tener al menos 8 caracteres.
+              2. Una letra minuscula.
+              3. Una letra mayuscula.
+              4. Un simbolo. 
+          
+          - password_confirmation: string REQUERIDO
+              1. Debe tener al menos 8 caracteres.
+              2. Una letra minuscula.
+              3. Una letra mayuscula.
+              4. Un simbolo. 
+              5. Identico a poassword.
+            
+          - first_name: string REQUERIDO
+              1. Maximo 100 caracteres.
+              
+          - last_name: string REQUERIDO
+              1. Maximo 100 caracteres.
+       
+        Response:
+          - email:correo electrónico registrado, este se retorna el mminusculas.
+          - user_name: se genera a partir del email.
+          - id_number: número de identificación registrado.
+          - first_name: nombre(s) del usuario, se registra en mayuscula.
+          - last_name: apellido(s) del usuario, se registra en mayuscula.
+          
+        
+        Requiere:
+        1. Todos los campos.
+        2. Autorización como administrador.
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegisterRequest'
+      responses:
+        '201':
+          description: Usuario registrado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserRegistrationSuccess"
+        '422':
+          description: Error de validación de datos.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+        '409':
+          description: Conflicto de negocio o error SQL.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConflictError"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: "Sanctum Token"
+  schemas:
+    # --- ESQUEMAS DE REQUESTS (Peticiones) ---
+    UserUpdateRequest:
+      type: object
+      description: Campos requeridos para la actualización de un usuario (solo nombre y apellido).
+      required:
+        - first_name
+        - last_name
+      properties:
+        first_name:
+          type: string
+          description: Nuevo nombre(s) del usuario.
+          example: Fernando
+        last_name:
+          type: string
+          description: Nuevo apellido(s) del usuario.
+          example: Rodriguez
+    UserRegisterRequest:
+      type: object
+      required:
+        - first_name
+        - last_name
+        - id_number
+        - email
+        - password
+        - password_confirmation
+      properties:
+        first_name:
+          type: string
+          description: Nombre del usuario.
+          example: Mario
+        last_name:
+          type: string
+          description: Apellido del usuario.
+          example: Torres
+        id_number:
+          type: string
+          description: Número de identificación único.
+          example: "1000000000"
+        email:
+          type: string
+          format: email
+          description: Correo electrónico único.
+          example: nuevo.usuario@dominio.com
+        password:
+          type: string
+          format: password
+          example: Pass1234!
+        password_confirmation:
+          type: string
+          format: password
+          example: Pass1234!
+    # --- ESQUEMAS DE DATA (Modelos) ---
+    UserResource:
+      type: object
+      description: Formato de datos de usuario devuelto por la API.
+      properties:
+        first_name:
+          type: string
+          example: MARIO
+        last_name:
+          type: string
+          example: TORRES
+        user_name:
+          type: string
+          example: nuevo.usuario
+        id_number:
+          type: string
+          example: "1000000000"
+        email:
+          type: string
+          example: nuevo.usuario@dominio.com
+        id:
+          type: string
+          format: uuid
+          example: 0199f06a-b032-73ed-a16d-f7647fc50eef
+    # --- ESQUEMAS DE RESPUESTAS ESTANDARIZADAS ---
+    UserResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Datos recuperados exitosamente.
+        data:
+          $ref: "#/components/schemas/UserResource"
+    # --- ESQUEMAS DE RESPUESTAS ESTANDARIZADAS ---
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Identificador único del usuario (UUID v7).
+          example: "0199f050-1d58-714f-a856-478c429d4f44"
+        id_number:
+          type: string
+          description: Número de identificación del usuario.
+          example: "1000000000"
+        user_name:
+          type: string
+          description: Nombre de usuario único.
+          example: "user1"
+        email:
+          type: string
+          format: email
+          description: Correo electrónico del usuario.
+          example: "user1@gmail.com"
+        first_name:
+          type: string
+          description: Nombre del usuario en mayúsculas.
+          example: "USER"
+        last_name:
+          type: string
+          description: Apellido del usuario en mayúsculas.
+          example: "1"
+    UserRegistrationSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: User registered successfully.
+        data:
+          $ref: "#/components/schemas/UserResource"
+          
+    AuthSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Login successful.
+        data:
+          type: object
+          properties:
+            user:
+              $ref: "#/components/schemas/UserResource"
+            token:
+              type: string
+              example: 1|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+    # --- ESQUEMAS DE ERRORES ---
+    ValidationError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: The given data was invalid.
+        errors:
+          type: object
+          description: Lista detallada de errores de validación por campo.
+          additionalProperties:
+            type: array
+            items:
+              type: string
+              example: El campo first name es obligatorio.
+
+    ConflictError:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: Error SQL o de lógica de negocio capturado.
+    
+    ApiResponseError:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [error, fail] 
+          example: error
+        message:
+          type: string
+        data:
+          type: 'null'
+          example: null
+      
