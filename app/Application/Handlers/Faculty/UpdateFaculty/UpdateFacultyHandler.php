@@ -66,9 +66,7 @@ class UpdateFacultyHandler
 
             return ApiResponse::internalServerError("Error de base de datos al actualizar facultad.");
         } catch (Exception $e) {
-            $exceptionType = get_class($e);
             Log::error('Ocurrió un error inesperado.', [
-                'exception_type' => $exceptionType,
                 'exception' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),

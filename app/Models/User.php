@@ -110,6 +110,8 @@ class User extends Authenticatable
      */
     public function hasRole(string $roleName): bool
     {
+        $roleName = strtoupper($roleName);
+
         return $this->roles->contains('name', $roleName);
     }
 }

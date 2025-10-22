@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             RoleUserSeeder::class,
             FacultySeeder::class,
+            ProgramSeeder::class,
         ]);
     }
 }

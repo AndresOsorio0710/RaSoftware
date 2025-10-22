@@ -28,6 +28,10 @@
     php artisan make:controller Api/Faculty/GetFacultyController
     php artisan make:controller Api/Faculty/ListFacultyController
     php artisan make:controller Api/Faculty/UpdateFacultyController
+    php artisan make:controller Api/Program/CreateProgramController
+    php artisan make:controller Api/Program/GetProgramController
+    php artisan make:controller Api/Program/ListProgramController
+    php artisan make:controller Api/Program/UpdateProgramController
     ```
 
 -   ### Create project
@@ -68,6 +72,12 @@
     php artisan make:class Application/Handlers/Faculty/GetFaculty/GetFacultyHandler
     php artisan make:class Application/Handlers/Faculty/ListFaculty/ListFacultyHandler
     php artisan make:class Application/Handlers/Faculty/UpdateFaculty/UpdateFacultyHandler
+    php artisan make:class Application/Handlers/Program/CreateProgram/CreateProgramHandler
+    php artisan make:class Application/Handlers/Program/GetProgram/GetProgramHandler
+    php artisan make:class Application/Handlers/Program/ListProgram/ListProgramHandler
+    php artisan make:class Application/Handlers/Program/ListProgram/ListProgramByFacultyIdHandler
+    php artisan make:class Application/Handlers/Program/ListProgram/ListProgramByManagerIdHandler
+    php artisan make:class Application/Handlers/Program/UpdateProgram/UpdateProgramHandler
     ```
 
 -   ### Middlewares
@@ -104,6 +114,7 @@
     php artisan make:model Role -m
     php artisan make:migration create_role_user_table --create=role_user
     php artisan make:model Faculty -m
+    php artisan make:model Program -m
     ```
 
 -   ### Queries
@@ -123,6 +134,8 @@
     php artisan make:request Auth/LoginRequest
     php artisan make:request Faculty/CreateFacultyRequest
     php artisan make:request Faculty/UpdateFacultyRequest
+    php artisan make:request Program/CreateProgramRequest
+    php artisan make:request Program/UpdateProgramRequest
     ```
 
 -   ### Requires
@@ -149,6 +162,7 @@
     php artisan make:resource Role/RoleResource
     php artisan make:resource Auth/AuthResource
     php artisan make:resource Faculty/FacultyResource
+    php artisan make:resource Program/ProgramResource
     ```
 
 -   ### Routes
@@ -160,6 +174,7 @@
     New-Item routes/user_role.php -ItemType File
     New-Item routes/auth.php -ItemType File
     New-Item routes/faculty.php -ItemType File
+    New-Item routes/program.php -ItemType File
     ```
 
 -   ### Seeders
@@ -171,6 +186,7 @@
         php artisan make:seeder UserSeeder
         php artisan make:seeder RoleUserSeeder
         php artisan make:seeder FacultySeeder
+        php artisan make:seeder ProgramSeeder
         ```
 
     -   _Execute_

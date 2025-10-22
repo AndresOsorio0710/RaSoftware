@@ -31,7 +31,7 @@ class RoleSeeder extends Seeder
                     ['description' => $description]
                 );
             }
-            $this->command->info('Roles base creados exitosamente.');
+            $this->command->info('Roles (SADMIN, ADMIN, MANAGER, LIDER, TEACHER, EVALUATOR y STUDENT) base creados exitosamente.');
         });
     }
 }
