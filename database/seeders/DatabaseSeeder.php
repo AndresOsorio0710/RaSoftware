@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             RoleUserSeeder::class,
             FacultySeeder::class,
             ProgramSeeder::class,
+            PeriodSeeder::class,
         ]);
     }
 }

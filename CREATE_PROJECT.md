@@ -32,6 +32,11 @@
     php artisan make:controller Api/Program/GetProgramController
     php artisan make:controller Api/Program/ListProgramController
     php artisan make:controller Api/Program/UpdateProgramController
+
+    php artisan make:controller Api/Period/CreatePeriodController
+    php artisan make:controller Api/Period/GetPeriodController
+    php artisan make:controller Api/Period/ListPeriodController
+    php artisan make:controller Api/Period/UpdatePeriodController
     ```
 
 -   ### Create project
@@ -78,6 +83,12 @@
     php artisan make:class Application/Handlers/Program/ListProgram/ListProgramByFacultyIdHandler
     php artisan make:class Application/Handlers/Program/ListProgram/ListProgramByManagerIdHandler
     php artisan make:class Application/Handlers/Program/UpdateProgram/UpdateProgramHandler
+    php artisan make:class Application/Handlers/Period/CreatePeriod/CreatePeriodHandler
+
+    php artisan make:class Application/Handlers/Period/GetPeriod/GetPeriodHandler
+    php artisan make:class Application/Handlers/Period/ListPeriod/ListPeriodHandler
+    php artisan make:class Application/Handlers/Period/ListPeriod/ListPeriodByPerogramIdHandler
+    php artisan make:class Application/Handlers/Period/UpdatePeriod/UpdatePeriodHandler
     ```
 
 -   ### Middlewares
@@ -115,6 +126,7 @@
     php artisan make:migration create_role_user_table --create=role_user
     php artisan make:model Faculty -m
     php artisan make:model Program -m
+    php artisan make:model Period -m
     ```
 
 -   ### Queries
@@ -136,6 +148,8 @@
     php artisan make:request Faculty/UpdateFacultyRequest
     php artisan make:request Program/CreateProgramRequest
     php artisan make:request Program/UpdateProgramRequest
+    php artisan make:request Period/CreatePeriodRequest
+    php artisan make:request Period/UpdatePeriodRequest
     ```
 
 -   ### Requires
@@ -163,6 +177,7 @@
     php artisan make:resource Auth/AuthResource
     php artisan make:resource Faculty/FacultyResource
     php artisan make:resource Program/ProgramResource
+    php artisan make:resource Period/PeriodResource
     ```
 
 -   ### Routes
@@ -175,6 +190,7 @@
     New-Item routes/auth.php -ItemType File
     New-Item routes/faculty.php -ItemType File
     New-Item routes/program.php -ItemType File
+    New-Item routes/period.php -ItemType File
     ```
 
 -   ### Seeders
@@ -187,6 +203,7 @@
         php artisan make:seeder RoleUserSeeder
         php artisan make:seeder FacultySeeder
         php artisan make:seeder ProgramSeeder
+        php artisan make:seeder PeriodSeeder
         ```
 
     -   _Execute_

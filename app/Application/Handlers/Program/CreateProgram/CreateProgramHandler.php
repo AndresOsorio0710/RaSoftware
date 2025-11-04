@@ -42,7 +42,7 @@ class CreateProgramHandler
 
             return ApiResponse::created(
                 $response,
-                "Programa creado exitosamente"
+                "Programa creado exitosamente."
             );
         } catch (QueryException $ex) {
             Log::error('Error de base de datos al intentar crear un programa.', [
